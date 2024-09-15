@@ -10,7 +10,7 @@ interface ControlProps {
   playerId: string;
 }
 
-function Control({ name, roomId, playerId }: ControlProps) {
+export default function Control({ name, roomId, playerId }: ControlProps) {
   const handleClick = useCallback(
     (direction: Direction) => {
       const controlRef = ref(database, `${roomId}/controls`);
@@ -54,17 +54,19 @@ function Control({ name, roomId, playerId }: ControlProps) {
 
   const controlButtonStyle = {
     borderRadius: "50%",
-    width: "100px",
-    height: "100px",
-    fontSize: "3rem",
+    width: "70px",
+    height: "70px",
+    fontSize: "2rem",
     color: "white",
     backgroundColor: "#4a90e2",
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 bg-[#f5f5f5] rounded-[16px] max-w-[500px] mx-auto text-center shadow-[0px 8px 20px rgba(0, 0, 0, 0.1)] p-8">
+    <div className="flex flex-col items-center gap-4 bg-[#f5f5f5] rounded-[16px] mx-auto text-center shadow-[0px 8px 20px rgba(0, 0, 0, 0.1)] p-4 sm:p-8 max-w-sm sm:max-w-lg">
       {name && (
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">{name}</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
+          {name}
+        </h1>
       )}
       <div
         style={{
@@ -107,5 +109,3 @@ function Control({ name, roomId, playerId }: ControlProps) {
     </div>
   );
 }
-
-export default Control;

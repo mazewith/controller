@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Control from "@/components/Control";
 import CreatePlayerForm from "@/components/CreatePlayerForm";
 import { useSearchParams } from "./hooks/useSearchParams";
 
 export default function App() {
   const { roomId } = useSearchParams();
-  const [playerId] = useState(Math.random().toString());
+  const playerIdRef = useRef(Math.random().toString());
+  const playerId = playerIdRef.current;
+
   const [name, setName] = useState("");
   const [color, setColor] = useState(
     `#${Math.floor(Math.random() * 0xffffff)
@@ -13,15 +15,15 @@ export default function App() {
       .padStart(6, "0")}`
   );
   const [showControls, setShowControls] = useState(false);
-  const [custStyle, setCustStyle] = useState({});
 
-  useEffect(() => {
-    setCustStyle({ background: `linear-gradient(135deg, ${color}, #fff)` });
-  }, [color]);
+  const custStyle = useMemo(
+    () => ({ background: `linear-gradient(135deg, ${color}, #fff)` }),
+    [color]
+  );
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center text-center"
+      className="min-h-screen min-w-screen flex items-center justify-center text-center"
       style={custStyle}
     >
       {showControls ? (

@@ -21,11 +21,28 @@ export default function CreatePlayerForm({
   setShowControls,
   playerId,
 }: CreatePlayerFormProps) {
-  const handleSubmit = () => {
-    const playersRef = ref(database, `${roomId}/players`);
-    const player: CreatePlayerDto = { id: playerId, name, roomId, color };
-    set(playersRef, player);
-    setShowControls(true);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Trim the name and generate a random name if it's empty
+    // Player#1234
+    const formattedName =
+      name.trim() || `Player#${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const player: CreatePlayerDto = {
+      id: playerId,
+      name: formattedName,
+      roomId,
+      color,
+    };
+
+    const playerRef = ref(database, `${roomId}/players`);
+    set(playerRef, player)
+      .then(() => setName(formattedName))
+      .then(() => setShowControls(true))
+      .catch((error) => {
+        console.error("Error adding player to database:", error);
+      });
   };
 
   return (
@@ -42,12 +59,11 @@ export default function CreatePlayerForm({
         type="color"
         value={color}
         onChange={(e) => setColor(e.target.value)}
-        placeholder="Enter player color"
-        className="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none"
+        className="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg"
       />
       <button
         type="submit"
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
       >
         Join Game
       </button>
